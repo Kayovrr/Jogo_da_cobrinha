@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f5068b5b-8d51-4b89-8316-af4e6420cac3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/game/src/IniciarJogo.java" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/IniciarJogo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/Jogo_Da_Cobrona.java" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/Jogo_Da_Cobrona.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/back.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/master.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="38uWpGlgt8gYsMuEXhUdwKPXK0v" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.IniciarJogo.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "create.test.in.the.same.root": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kayov/OneDrive/Área de Trabalho/scripts/Jogo da cobrinha",
+    "onboarding.tips.debug.path": "C:/Users/kayov/OneDrive/Área de Trabalho/scripts/Jogo da cobrinha/game/src/Main.java"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kayov\OneDrive\Área de Trabalho\scripts\Jogo da cobrinha\game\src" />
+    </key>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f5068b5b-8d51-4b89-8316-af4e6420cac3" name="Changes" comment="" />
+      <created>1769650117212</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769650117212</updated>
+    </task>
+    <servers />
+  </component>
+</project>
