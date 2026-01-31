@@ -29,11 +29,19 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     boolean running = false;//estado do jogo
     Timer timer;//timer do jogo
     Random random;//gerador de numeros aleatorios
+    private Scores scores;
+    private Runnable aoTerminarJogo;
 
 
 
     //construtor da classe master, onde inicia as variaveis e configurações iniciais
     Jogo_Da_Cobrona() {
+        this(null, null);
+    }
+
+    Jogo_Da_Cobrona(Scores scores, Runnable aoTerminarJogo) {
+        this.scores = scores;
+        this.aoTerminarJogo = aoTerminarJogo;
         random = new Random();
         this.setPreferredSize(new Dimension(LARGURA_TELA, ALTURA_TELA));//define o tamanho da tela
         this.setBackground(Color.black);//define a cor de fundo
@@ -120,6 +128,9 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
             checkApple();//verifica se a cobrinha comeu a maca
             if (checkBorderCollision()) {
                 running = false;//se colidiu com a borda, o jogo termina
+                if (scores != null) {
+                    scores.adicionarScore(Pontos);
+                }
             }
         }
         repaint();//repaint para atualizar a tela
@@ -131,6 +142,14 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     //verificando se a cobrinha nao esta se movendo na direcao oposta
     @Override
     public void keyPressed(KeyEvent e) {
+        // Se pressionou ESC e o jogo terminou, volta ao menu
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !running) {
+            if (aoTerminarJogo != null) {
+                aoTerminarJogo.run();
+            }
+            return;
+        }
+
         //muda a direcao da cobrinha baseado na tecla pressionada
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT://adiciona a seta para esquerda para mover para esquerda
@@ -193,6 +212,11 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     }
 
     public void fimDeJogo(Graphics g) {
+        // Se timer está rodando, para o timer
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+
         g.setColor(Color.red);
 
         // Pontuação
@@ -213,6 +237,16 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
                 ALTURA_TELA / 2
         );
 
+        // Instrução de volta ao menu
+        g.setColor(Color.white);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        FontMetrics fonteInstrucao = getFontMetrics(g.getFont());
+        String instrucao = "Pressione ESC para voltar ao menu";
+        g.drawString(
+                instrucao,
+                (LARGURA_TELA - fonteInstrucao.stringWidth(instrucao)) / 2,
+                ALTURA_TELA - 30
+        );
     }
 
 
