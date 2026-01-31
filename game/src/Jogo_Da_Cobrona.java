@@ -9,17 +9,20 @@ import java.util.ArrayList;
 public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListener {
 
     //tamanho da tela
-    public static int LARGURA_TELA = 600;
+    public static int LARGURA_TELA = 700;
     public static int ALTURA_TELA = 600;
     private final int TAMANHO_UNIDADE = 25;//tamanho de cada unidade da cobrinha
     private final int TOTAL_UNIDADES = (LARGURA_TELA * ALTURA_TELA) / (TAMANHO_UNIDADE * TAMANHO_UNIDADE);//total de unidades na tela
     private final int DELAY = 75;//velocidade do jogo
+    public static final String NOME_FONTE = "Pixgrid";
+
+
 
     //variaveis e arrays para armazenar as posicoes da cobrinha e outras coisas
     final int x[] = new int[TOTAL_UNIDADES];//posicoes x da cobrinha
     final int y[] = new int[TOTAL_UNIDADES];//posicoes y da cobrinha
     int bodyParts = 6;//tamanho inicial da cobrinha
-    int applesEaten;//pontuacao
+    int Pontos;//pontuacao
     int appleX;//posicao x da maca
     int appleY;//posicao y da maca
     char direction = 'D';//direcao inicial da cobrinha
@@ -54,7 +57,7 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     public boolean checkApple() {
         if (x[0] == appleX && y[0] == appleY) {
             bodyParts++;
-            applesEaten++;
+            Pontos++;
             spawnApple();
             return true;
         }
@@ -161,8 +164,55 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.red); // <<< caso queira alterar a cor
-        g.fillRect(x[0], y[0], TAMANHO_UNIDADE, TAMANHO_UNIDADE); // passa as cordenadas é define o tamnho a cada frame 
+        desenharTela(g);
+    }
+
+    public void desenharTela(Graphics g) {
+
+        if (running) {
+            g.setColor(Color.red);
+            g.fillOval(appleX,appleY, TAMANHO_UNIDADE,TAMANHO_UNIDADE);
+
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[0], y[0], TAMANHO_UNIDADE, TAMANHO_UNIDADE);
+                } else {
+                    g.setColor(new Color(45, 180, 0));
+                    g.fillRect(x[i], y[i], TAMANHO_UNIDADE, TAMANHO_UNIDADE);
+                }
+            }
+            g.setColor(Color.red);
+            g.setFont(new Font(NOME_FONTE, Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Pontos: " + Pontos, (LARGURA_TELA - metrics.stringWidth("Pontos: " + Pontos)) / 2, g.getFont().getSize());
+        } else {
+            fimDeJogo(g);
+        }
+
+    }
+
+    public void fimDeJogo(Graphics g) {
+        g.setColor(Color.red);
+
+        // Pontuação
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+        FontMetrics fontePontuacao = getFontMetrics(g.getFont());
+        g.drawString(
+                "Pontos: " + Pontos,
+                (LARGURA_TELA - fontePontuacao.stringWidth("Pontos: " + Pontos)) / 2,
+                g.getFont().getSize()
+        );
+
+        // Texto final
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 75));
+        FontMetrics fonteFinal = getFontMetrics(g.getFont());
+        g.drawString(
+                "Você se lascou",
+                (LARGURA_TELA - fonteFinal.stringWidth("Você se lascou")) / 2,
+                ALTURA_TELA / 2
+        );
+
     }
 
 
