@@ -23,8 +23,7 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     final int y[] = new int[TOTAL_UNIDADES];//posicoes y da cobrinha
     int bodyParts = 6;//tamanho inicial da cobrinha
     int Pontos;//pontuacao
-    int appleX;//posicao x da maca
-    int appleY;//posicao y da maca
+    private Maca maca;
     char direction = 'D';//direcao inicial da cobrinha
     boolean running = false;//estado do jogo
     Timer timer;//timer do jogo
@@ -47,31 +46,29 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
         this.setBackground(Color.black);//define a cor de fundo
         this.setFocusable(true);//define que o painel pode receber foco, parece necessario para capturar eventos de teclado
         this.addKeyListener(this);//adiciona o listener de teclado
+        maca = new Maca(0, 0); // Posição inicial será definida no spawnApple
         startGame();//inicia o jogo :)
     }
 
 
-
     //comida
     public void spawnApple() {
-        //gera posicoes aleatorias para a maca
-        appleX = random.nextInt((int) (LARGURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
-        appleY = random.nextInt((int) (ALTURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
-    }
-
+    int posX = random.nextInt((int) (LARGURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
+    int posY = random.nextInt((int) (ALTURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
+    maca.setPosicao(posX, posY);
+}
 
 
     //colisao com a maca
     public boolean checkApple() {
-        if (x[0] == appleX && y[0] == appleY) {
-            bodyParts++;
-            Pontos++;
-            spawnApple();
-            return true;
-        }
-        return false;
+    if (x[0] == maca.getX() && y[0] == maca.getY()) {
+        bodyParts++;
+        Pontos++;
+        spawnApple();
+        return true;
     }
-
+    return false;
+}
 
 
     //colisao com as bordas da tela
@@ -81,6 +78,17 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
         }
         return false;
     }
+
+    // Verifica se a cabeça colidiu com qualquer parte do próprio corpo, teste 
+public boolean checkSelfCollision() {
+    // Ignora o último segmento (a cauda)
+    for (int i = 1; i < bodyParts; i++){
+        if (x[0] == x[i] && y[0] == y[i]) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 
@@ -120,22 +128,22 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
 
 
 
-    //metodo para logica de açao do jogo, como movimentação, colisões, etc
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (running) {
-            move();//move a cobrinha
-            checkApple();//verifica se a cobrinha comeu a maca
-            if (checkBorderCollision()) {
-                running = false;//se colidiu com a borda, o jogo termina
-                if (scores != null) {
-                    scores.adicionarScore(Pontos);
-                }
+  // Este método é chamado automaticamente pelo Timer (DELAY) e implementação do teste
+@Override
+public void actionPerformed(ActionEvent e) {
+    if (running) {
+        move();           // move tudo
+        checkApple();     // cresce se comer
+
+        if (checkBorderCollision() || checkSelfCollision()) {
+            running = false;
+            if (scores != null) {
+                scores.adicionarScore(Pontos);
             }
         }
-        repaint();//repaint para atualizar a tela
     }
-
+    repaint();
+}
 
 
     //metodos para capturar eventos de teclado com as teclas "wasd" ou as setas direcionais
@@ -190,7 +198,7 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
 
         if (running) {
             g.setColor(Color.red);
-            g.fillOval(appleX,appleY, TAMANHO_UNIDADE,TAMANHO_UNIDADE);
+            maca.desenhar(g, TAMANHO_UNIDADE); // Chama o método da classe Maca
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {

@@ -5,18 +5,29 @@ public class IniciarJogo {
     private static JFrame frame;
     private static JPanel painelAtual;
 
-    public static void main(String[] args) throws Exception {
-        frame = new JFrame("Cobrona");
-        frame.setSize(Jogo_Da_Cobrona.LARGURA_TELA, Jogo_Da_Cobrona.ALTURA_TELA);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) {
+        try {
+            // Bloco de tratamento de exceção exigido para a robustez da interface gráfica
+            frame = new JFrame("Cobrona");
+            frame.setSize(Jogo_Da_Cobrona.LARGURA_TELA, Jogo_Da_Cobrona.ALTURA_TELA);
+            frame.setLocationRelativeTo(null);
+            frame.setResizable(false);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mostrarMenu();
+            // Inicia o fluxo chamando o menu principal
+            mostrarMenu();
 
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+        } catch (Exception e) {
+            // Tratamento: exibe uma mensagem de erro amigável caso ocorra falha na inicialização
+            JOptionPane.showMessageDialog(null, 
+                "Ocorreu um erro ao iniciar a aplicação: " + e.getMessage(), 
+                "Erro Crítico", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private static void mostrarMenu() {
