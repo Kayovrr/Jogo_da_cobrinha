@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Comida
+comment1.params=x\ y
+comment1.target=Comida(int,\ int)
+comment2.params=
+comment2.target=int\ getValorPontos()
+numComments=3

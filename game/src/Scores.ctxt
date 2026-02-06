@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Scores
+comment1.params=aoClicarVoltar
+comment1.target=Scores(java.lang.Runnable)
+comment2.params=score
+comment2.target=void\ adicionarScore(int)
+numComments=3

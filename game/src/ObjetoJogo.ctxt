@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=ObjetoJogo
+comment1.params=x\ y
+comment1.target=ObjetoJogo(int,\ int)
+comment2.params=g\ tamanho
+comment2.target=void\ desenhar(java.awt.Graphics,\ int)
+comment3.params=
+comment3.target=int\ getX()
+comment4.params=
+comment4.target=int\ getY()
+numComments=5

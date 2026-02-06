@@ -9,56 +9,75 @@ import java.util.ArrayList;
 public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListener {
 
     //tamanho da tela
-    public static int LARGURA_TELA = 600;
+    public static int LARGURA_TELA = 700;
     public static int ALTURA_TELA = 600;
     private final int TAMANHO_UNIDADE = 25;//tamanho de cada unidade da cobrinha
     private final int TOTAL_UNIDADES = (LARGURA_TELA * ALTURA_TELA) / (TAMANHO_UNIDADE * TAMANHO_UNIDADE);//total de unidades na tela
-    private final int DELAY = 75;//velocidade do jogo
+    private int delay = 75; //vel inicial
+    private final int DELAY_MIN = 35; //limite mínimo de vel
+    public static final String NOME_FONTE = "Pixgrid";
+
+
 
     //variaveis e arrays para armazenar as posicoes da cobrinha e outras coisas
     final int x[] = new int[TOTAL_UNIDADES];//posicoes x da cobrinha
     final int y[] = new int[TOTAL_UNIDADES];//posicoes y da cobrinha
     int bodyParts = 6;//tamanho inicial da cobrinha
-    int applesEaten;//pontuacao
-    int appleX;//posicao x da maca
-    int appleY;//posicao y da maca
+    int Pontos;//pontuacao
+    private Maca maca;
     char direction = 'D';//direcao inicial da cobrinha
     boolean running = false;//estado do jogo
     Timer timer;//timer do jogo
     Random random;//gerador de numeros aleatorios
+    private Scores scores;
+    private Runnable aoTerminarJogo;
 
 
 
     //construtor da classe master, onde inicia as variaveis e configurações iniciais
     Jogo_Da_Cobrona() {
+        this(null, null);
+    }
+
+    Jogo_Da_Cobrona(Scores scores, Runnable aoTerminarJogo) {
+        this.scores = scores;
+        this.aoTerminarJogo = aoTerminarJogo;
         random = new Random();
         this.setPreferredSize(new Dimension(LARGURA_TELA, ALTURA_TELA));//define o tamanho da tela
         this.setBackground(Color.black);//define a cor de fundo
         this.setFocusable(true);//define que o painel pode receber foco, parece necessario para capturar eventos de teclado
         this.addKeyListener(this);//adiciona o listener de teclado
+        maca = new Maca(0, 0); // Posição inicial será definida no spawnApple
         startGame();//inicia o jogo :)
     }
 
 
-
     //comida
     public void spawnApple() {
-        //gera posicoes aleatorias para a maca
-        appleX = random.nextInt((int) (LARGURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
-        appleY = random.nextInt((int) (ALTURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
-    }
-
+    int posX = random.nextInt((int) (LARGURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
+    int posY = random.nextInt((int) (ALTURA_TELA / TAMANHO_UNIDADE)) * TAMANHO_UNIDADE;
+    maca.setPosicao(posX, posY);
+}
 
 
     //colisao com a maca
     public boolean checkApple() {
-        if (x[0] == appleX && y[0] == appleY) {
-            bodyParts++;
-            applesEaten++;
-            spawnApple();
-            return true;
+        if (x[0] == maca.getX() && y[0] == maca.getY()) {
+        bodyParts++;
+        Pontos++;
+        aumentarVelocidade();
+        spawnApple();
+        return true;
         }
-        return false;
+    return false;
+    }
+
+    //aumento da vel
+    private void aumentarVelocidade() {
+        if (delay > DELAY_MIN) {
+        delay -= 3;
+        timer.setDelay(delay);
+        }
     }
 
 
@@ -70,6 +89,17 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
         }
         return false;
     }
+
+    // Verifica se a cabeça colidiu com qualquer parte do próprio corpo, teste 
+public boolean checkSelfCollision() {
+    // Ignora o último segmento (a cauda)
+    for (int i = 1; i < bodyParts; i++){
+        if (x[0] == x[i] && y[0] == y[i]) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 
@@ -97,37 +127,50 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
         }
     }
 
+    
+
 
 
     //metodo para iniciar o jogo
     public void startGame() {
         spawnApple();//gera a primeira maca
         running = true;//define que o jogo esta rodando
-        timer = new Timer(DELAY, this);//cria o timer do jogo
+        timer = new Timer(delay, this);//cria o timer do jogo
         timer.start();//inicia o timer
     }
 
 
 
-    //metodo para logica de açao do jogo, como movimentação, colisões, etc
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (running) {
-            move();//move a cobrinha
-            checkApple();//verifica se a cobrinha comeu a maca
-            if (checkBorderCollision()) {
-                running = false;//se colidiu com a borda, o jogo termina
+  // Este método é chamado automaticamente pelo Timer (DELAY) e implementação do teste
+@Override
+public void actionPerformed(ActionEvent e) {
+    if (running) {
+        move();           // move tudo
+        checkApple();     // cresce se comer
+
+        if (checkBorderCollision() || checkSelfCollision()) {
+            running = false;
+            if (scores != null) {
+                scores.adicionarScore(Pontos);
             }
         }
-        repaint();//repaint para atualizar a tela
     }
-
+    repaint();
+}
 
 
     //metodos para capturar eventos de teclado com as teclas "wasd" ou as setas direcionais
     //verificando se a cobrinha nao esta se movendo na direcao oposta
     @Override
     public void keyPressed(KeyEvent e) {
+        // Se pressionou ESC e o jogo terminou, volta ao menu
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !running) {
+            if (aoTerminarJogo != null) {
+                aoTerminarJogo.run();
+            }
+            return;
+        }
+
         //muda a direcao da cobrinha baseado na tecla pressionada
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT://adiciona a seta para esquerda para mover para esquerda
@@ -161,8 +204,70 @@ public class Jogo_Da_Cobrona extends JPanel implements ActionListener, KeyListen
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.red); // <<< caso queira alterar a cor
-        g.fillRect(x[0], y[0], TAMANHO_UNIDADE, TAMANHO_UNIDADE); // passa as cordenadas é define o tamnho a cada frame 
+        desenharTela(g);
+    }
+
+    public void desenharTela(Graphics g) {
+
+        if (running) {
+            g.setColor(Color.red);
+            maca.desenhar(g, TAMANHO_UNIDADE); // Chama o método da classe Maca
+
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[0], y[0], TAMANHO_UNIDADE, TAMANHO_UNIDADE);
+                } else {
+                    g.setColor(new Color(45, 180, 0));
+                    g.fillRect(x[i], y[i], TAMANHO_UNIDADE, TAMANHO_UNIDADE);
+                }
+            }
+            g.setColor(Color.red);
+            g.setFont(new Font(NOME_FONTE, Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Pontos: " + Pontos, (LARGURA_TELA - metrics.stringWidth("Pontos: " + Pontos)) / 2, g.getFont().getSize());
+        } else {
+            fimDeJogo(g);
+        }
+
+    }
+
+    public void fimDeJogo(Graphics g) {
+        // Se timer está rodando, para o timer
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+
+        g.setColor(Color.red);
+
+        // Pontuação
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+        FontMetrics fontePontuacao = getFontMetrics(g.getFont());
+        g.drawString(
+                "Pontos: " + Pontos,
+                (LARGURA_TELA - fontePontuacao.stringWidth("Pontos: " + Pontos)) / 2,
+                g.getFont().getSize()
+        );
+
+        // Texto final
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 75));
+        FontMetrics fonteFinal = getFontMetrics(g.getFont());
+        g.drawString(
+                "Você se lascou",
+                (LARGURA_TELA - fonteFinal.stringWidth("Você se lascou")) / 2,
+                ALTURA_TELA / 2
+        );
+
+        // Instrução de volta ao menu
+        g.setColor(Color.white);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        FontMetrics fonteInstrucao = getFontMetrics(g.getFont());
+        String instrucao = "Pressione ESC para voltar ao menu";
+        g.drawString(
+                instrucao,
+                (LARGURA_TELA - fonteInstrucao.stringWidth(instrucao)) / 2,
+                ALTURA_TELA - 30
+        );
     }
 
 

@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=MenuPrincipal
+comment1.params=aoClicarJogar\ aoClicarScores
+comment1.target=MenuPrincipal(java.lang.Runnable,\ java.lang.Runnable)
+comment2.params=texto\ cor
+comment2.target=javax.swing.JButton\ criarBotao(java.lang.String,\ java.awt.Color)
+numComments=3

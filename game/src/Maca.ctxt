@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=Maca
+comment1.params=x\ y
+comment1.target=Maca(int,\ int)
+comment2.params=g\ tamanho
+comment2.target=void\ desenhar(java.awt.Graphics,\ int)
+comment3.params=x\ y
+comment3.target=void\ setPosicao(int,\ int)
+numComments=4

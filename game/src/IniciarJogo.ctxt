@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=IniciarJogo
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+comment2.params=
+comment2.target=void\ mostrarMenu()
+comment3.params=scores
+comment3.target=void\ iniciarJogo(Scores)
+comment4.params=scores
+comment4.target=void\ mostrarScores(Scores)
+comment5.params=novoPanel
+comment5.target=void\ trocarPainel(javax.swing.JPanel)
+numComments=6
